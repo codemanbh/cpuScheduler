@@ -2,35 +2,40 @@ import java.util.Scanner;
 
 class App {
 
-    int[][] processes = new int[4][50];
-    int numOfProcesses = 0;
-    Scanner input = new Scanner(System.in);
+    static int[][] processes = new int[50][4];
+
+
+    int numOfProcesses = 0; 
     int algorithm = 0;
 
-    public void entryPrompt() {
-        System.out.println("what type of scheduling do you want to chose ?\n" +
-                "1) Priority Scheduling with Round Robin\n" +
-                "2) Shortest Job First with Round Robin");
+     // Collect process details
+     public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        ProcessData(input);
+     }
 
-        try {
-            algorithm = input.nextInt();
 
-            if (algorithm == 1) {
-                // do PriorityWithRoundRobin
-            } else if (algorithm == 2) {
-                // do Shortest Job First with Round Robin
+     //collecting Process data
+        public static void ProcessData(Scanner input) {
 
-            } else {
-                System.out.println("Please enter a valid algrithm number");
-            }
-        } catch (Exception e) {
+       for(int i=0; i<processes.length;i++){
+        System.out.println("Enter Process ID" +i);
+        processes[i][0] = input.nextInt();
+ 
+        System.out.println("Enter Brust Time" +i);
+        processes[i][1] = input.nextInt();
 
-        }
+        System.out.println("Enter Time Arrival" +i);
+        processes[i][2] = input.nextInt();
 
-        // TODO: ask the user to enter the process information, and add it to the
-        // processes array
-
+        System.out.println("Enter procsess Priorty" +i);
+        processes[i][3] = input.nextInt();
+             
     }
+}
+
+
+    
 
     public void PriorityWithRoundRobin() {
         for (int i = 0; i < numOfProcesses; i++) {
@@ -38,7 +43,5 @@ class App {
         }
     }
 
-    public static void main(String[] args) {
-
-    }
+  
 }
