@@ -98,16 +98,16 @@ class App {
     public static void ProcessData(Scanner input) {
         Process Process = null;
         for (int i = 0; i < processes.length; i++) {
-            System.out.println("Enter Process ID" + i);
+            System.out.println("Enter Process ID: " + i);
             processes[i][0] = input.nextInt();
 
-            System.out.println("Enter Brust Time" + i);
+            System.out.println("Enter Brust Time: " + i);
             processes[i][1] = input.nextInt();
 
-            System.out.println("Enter Time Arrival" + i);
+            System.out.println("Enter Time Arrival: " + i);
             processes[i][2] = input.nextInt();
 
-            System.out.println("Enter procsess Priorty" + i);
+            System.out.println("Enter process Priorty: " + i);
             processes[i][3] = input.nextInt();
 
             if (processes[i][0] == 0 && processes[i][1] == 0 && processes[i][2] == 0 && processes[i][3] == 0) {
@@ -144,6 +144,23 @@ class App {
         int totalWaitingTime = 0;
 
         ganttchart.add("0");
+        int i = 0; /* index */
+        while(processes.size() != 0){
+            int remainingBurst = processes.get(i).getRemainingBurst();
+            ganttchart.add("p" + processes.get(i).getPid());
+            if (remainingBurst-quantum >= 0) {
+                currentTime += remainingBurst;
+                processes.remove(i);
+            } else {
+                processes.get(i).setRemainingBurst(remainingBurst-quantum);
+                currentTime = currentTime+quantum;
+                i++;
+                if (i >= processes.size()){ /* If i == size, then it reached the end, must go back to first process in waiting */
+                    i = 0;
+                }
+            }
+            ganttchart.add((currentTime) + ""); /*  converting to string using concatenation */
+        }
     }
 
     public void PriorityWithRoundRobin() {
