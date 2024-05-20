@@ -75,6 +75,7 @@ class Process {
         this.remainingBurst = remainingBurst;
     }
 
+
 }
 
 class App {
@@ -91,7 +92,21 @@ class App {
         Scanner input = new Scanner(System.in);
         System.out.print("Enter quantum time (q): ");
         quantum = input.nextInt();
-        ProcessData(input);
+        //id arrival burst priority
+        Process firstprocess = new Process(1, 0, 1,2);
+        Process secondProcess = new Process(2, 1, 7, 6);
+        Process thirdProcess = new Process(3, 2, 3, 3);
+        Process fourthProcess = new Process(4, 3, 6, 5);
+        Process fifthProcess = new Process(5, 4, 5, 4);
+        processes1.add(firstprocess);
+        processes1.add(secondProcess);
+        processes1.add(thirdProcess);
+        processes1.add(fourthProcess);
+        processes1.add(fifthProcess);
+
+        schedullingAlgo(processes1, quantum);
+
+        // ProcessData(input);
     }
 
     // collecting Process data
@@ -124,14 +139,12 @@ class App {
             processes1.add(Process); // add every process to the process array list
 
         }
-
         schedullingAlgo(processes1, quantum);
-
     }
 
     public static void schedullingAlgo(ArrayList<Process> processes, int quantum) {
         // Sort processes based on arrival time and priority
-        processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
+        // processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
         processes.sort(Comparator.comparingInt(p -> p.getPriority()));
 
         // Queue for ready processes
@@ -142,31 +155,73 @@ class App {
         int totalTurnaroundTime = 0;
         int totalResponseTime = 0;
         int totalWaitingTime = 0;
+        // System.out.println("second bruh" + processes.get(1).getArrivalTime());
 
         ganttchart.add("0");
-        int i = 0; /* index */
-        while(processes.size() != 0){
+        int i = getNextReady(processes, 0, currentTime); /* index of first ready process*/
+        while(processes.size() != 1){
             int remainingBurst = processes.get(i).getRemainingBurst();
             ganttchart.add("p" + processes.get(i).getPid());
-            if (remainingBurst-quantum >= 0) {
+            if (remainingBurst-quantum <= 0) {
                 currentTime += remainingBurst;
                 processes.remove(i);
+                ganttchart.add((currentTime) + ""); /*  converting to string using concatenation */
             } else {
                 processes.get(i).setRemainingBurst(remainingBurst-quantum);
                 currentTime = currentTime+quantum;
-                i++;
-                if (i >= processes.size()){ /* If i == size, then it reached the end, must go back to first process in waiting */
-                    i = 0;
-                }
+                ganttchart.add((currentTime) + ""); /*  converting to string using concatenation */
             }
-            ganttchart.add((currentTime) + ""); /*  converting to string using concatenation */
+            i = getNextReady(processes, i, currentTime);
+            if (i == -1){
+                break;
+            }
+
+        }
+        ganttchart.add("p" + processes.get(0).getPid());
+        ganttchart.add(currentTime + processes.get(0).getRemainingBurst() + "");
+
+        int j = 0;
+        while (j < ganttchart.size()){
+            if (j == ganttchart.size() - 1) {
+                System.out.println(ganttchart.get(j));
+            } else {
+                if (j <= ganttchart.size()-3  && ganttchart.get(j) == ganttchart.get(j+2)){
+                    j += 2;
+                }
+                System.out.print(ganttchart.get(j) + "-");
+            }
+            j++;
         }
     }
 
-    public void PriorityWithRoundRobin() {
-        for (int i = 0; i < numOfProcesses; i++) {
-
+    public static int getNextReady(ArrayList<Process> processes, int currentIndex, int currentTime){
+        /* Return first ready process, they are already sorted by priority */
+        int size = processes.size();
+        int indexToReturn;
+        int j = 0;
+        // Start from the current index and check all processes circularly
+        for (int i = 0; i < size; i++) {
+            int index = (j + i) % size;
+            if (currentTime >= processes.get(index).getArrivalTime()) {
+                return index; //
+            }
         }
-    }
+        /* If still not returned, this means there is IDLE time in the CPU */
+        ganttchart.add("\033[33mIDLE\033[0m");
 
+        /* finding the minimum arrival time to choose as next process */
+        int minimum = Integer.MAX_VALUE;
+        for (int i = 0; i < processes.size(); i++){
+            int thisArrival = processes.get(i).getArrivalTime();
+            if (thisArrival < minimum){
+                minimum = thisArrival;
+            }
+        }
+        // ganttchart.add(currentTime + "");
+        if (minimum == Integer.MAX_VALUE){
+            return -1;
+        }
+        return minimum;
+
+    }
 }
