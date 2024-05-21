@@ -243,6 +243,7 @@ public class App {
             }
         }
         processesStatistics.sort(Comparator.comparingInt(p -> p.getPid()));
+        System.out.println("-----------------------");
 
         for (Process p : processesStatistics) {
             // processes1
