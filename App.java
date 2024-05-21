@@ -109,30 +109,36 @@ public class App {
             } else {
                 quantum = input.nextInt();
                 if (quantum <= 0) {
-                    System.out.println("Error: The quantum time must be greater than 0\n" +
-                            "Please enter the quantum time again");
+                    System.out.println(
+                            "Error: The quantum time must be greater than 0\n" + "Please enter the quantum time again");
                 } else {
                     break; // valid input, break the loop
                 }
             }
         }
 
-        // id arrival burst priority
-        // Process firstprocess = new Process(1, 0, 1, 2);
-        // Process secondProcess = new Process(2, 1, 7, 6);
-        // Process thirdProcess = new Process(3, 2, 3, 3);
-        // Process fourthProcess = new Process(4, 3, 6, 5);
-        // Process fifthProcess = new Process(5, 4, 5, 4);
-        // processes1.add(firstprocess);
-        // processes1.add(secondProcess);
-        // processes1.add(thirdProcess);
-        // processes1.add(fourthProcess);
-        // processes1.add(fifthProcess);
+        System.out.println("Do you like to use preentered process (yes/no)?");
+        input = new Scanner(System.in);
+        String var = input.nextLine();
+        if (var.equalsIgnoreCase("yes")) {
+            // id arrival burst priority
+            Process firstprocess = new Process(1, 0, 1, 2);
+            Process secondProcess = new Process(2, 1, 7, 6);
+            Process thirdProcess = new Process(3, 2, 3, 3);
+            Process fourthProcess = new Process(4, 3, 6, 5);
+            Process fifthProcess = new Process(5, 4, 5, 4);
+            processes1.add(firstprocess);
+            processes1.add(secondProcess);
+            processes1.add(thirdProcess);
+            processes1.add(fourthProcess);
+            processes1.add(fifthProcess);
+            numOfProcesses = processes1.size();
+            schedullingAlgo(processes1, quantum);
 
-        numOfProcesses = processes1.size();
-        ProcessData(input);
+        } else {
+            ProcessData(input);
+        }
 
-        // schedullingAlgo(processes1, quantum);
         displayGanttChart();
         displayStatistics();
         // displayAvg();
