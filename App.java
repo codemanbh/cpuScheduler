@@ -145,68 +145,66 @@ public class App {
     }
 
     public static boolean isTheIdUniqe(int id) {
-
         for (Process p : processes1) {
             if (p.getPid() == id) {
                 return false;
             }
         }
-
         return true;
+    }
+
+    
+    public static int getIntInput(Scanner input, String prompt) {
+        System.out.print(prompt);
+        while (!input.hasNextInt()) {
+            System.out.println("That's not a valid integer. Please enter an integer.");
+            input.next();
+            System.out.print(prompt);
+        }
+        return input.nextInt();
     }
 
     // collecting Process data
     public static void ProcessData(Scanner input) {
-        Process Process = null;
         for (int i = 0; i < processes.length; i++) {
-            System.out.print("Enter Process ID: ");
-            processes[i][0] = input.nextInt();
+            processes[i][0] = getIntInput(input, "Enter Process ID: ");
 
             while (!isTheIdUniqe(processes[i][0])) {
-                System.out.println("Sorry the ID " + processes[i][0] + " is already taken, chose another one");
-                System.out.print("Enter Process ID: ");
-                processes[i][0] = input.nextInt();
+                System.out.println("Sorry the ID " + processes[i][0] + " is already taken, choose another one");
+                processes[i][0] = getIntInput(input, "Enter Process ID: ");
             }
 
-            System.out.print("Enter Brust Time: ");
-            processes[i][1] = input.nextInt();
-
-            while (processes[i][1] < 0) {
-                System.out.println("The burst time must be positive");
-                System.out.print("Enter Brust Time: ");
-                processes[i][1] = input.nextInt();
-            }
-
-            System.out.print("Enter Time Arrival: ");
-            processes[i][2] = input.nextInt();
-
+            processes[i][2] = getIntInput(input, "Enter Time Arrival: ");
             while (processes[i][2] < 0) {
                 System.out.println("The arrival time must be positive");
-                System.out.print("Enter Time Arrival: ");
-                processes[i][2] = input.nextInt();
+                processes[i][2] = getIntInput(input, "Enter Time Arrival: ");
             }
 
-            System.out.print("Enter process Priorty: ");
-            processes[i][3] = input.nextInt();
+            processes[i][1] = getIntInput(input, "Enter Burst Time: ");
+            while (processes[i][1] < 0) {
+                System.out.println("The burst time must be positive");
+                processes[i][1] = getIntInput(input, "Enter Burst Time: ");
+            }
 
+            processes[i][3] = getIntInput(input, "Enter process Priority: ");
             while (processes[i][3] < 0) {
-                System.out.println("The Priorty must be 0 or positive");
-                System.out.print("Enter process Priorty: ");
-                processes[i][3] = input.nextInt();
+                System.out.println("The Priority must be 0 or positive");
+                processes[i][3] = getIntInput(input, "Enter process Priority: ");
             }
 
             if (processes[i][0] == 0 && processes[i][1] == 0 && processes[i][2] == 0 && processes[i][3] == 0) {
                 break;
             }
-            Process = new Process(processes[i][0], processes[i][2], processes[i][1], processes[i][3]);
 
-            processes1.add(Process); // add every process to the process array list
+            Process process = new Process(processes[i][0], processes[i][2], processes[i][1], processes[i][3]);
+            processes1.add(process);
             System.out.println("-------------");
         }
         schedullingAlgo(processes1, quantum);
         numOfProcesses = processes1.size();
-
     }
+
+
 
     public static void schedullingAlgo(ArrayList<Process> processes, int quantum) {
         // Sort processes based on arrival time and priority
