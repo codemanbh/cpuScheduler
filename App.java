@@ -101,12 +101,20 @@ public class App {
         Scanner input = new Scanner(System.in);
         System.out.print("Enter quantum time (q): ");
 
-        quantum = input.nextInt();
-
-        while (quantum <= 0) {
-            System.out.println(
-                    "Error: The quantum time must be greater than 0\n" + "Please enter the quantum time again");
-            quantum = input.nextInt();
+        // debugging quantum time (q).
+        while (true) {
+            if (!input.hasNextInt()) {
+                System.out.println("That's not a valid integer. Please enter an integer.");
+                input.next(); // discard the non-integer input
+            } else {
+                quantum = input.nextInt();
+                if (quantum <= 0) {
+                    System.out.println("Error: The quantum time must be greater than 0\n" +
+                            "Please enter the quantum time again");
+                } else {
+                    break; // valid input, break the loop
+                }
+            }
         }
 
         // id arrival burst priority
