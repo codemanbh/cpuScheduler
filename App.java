@@ -110,56 +110,88 @@ public class App {
         }
 
         // id arrival burst priority
-        Process firstprocess = new Process(1, 0, 1, 2);
-        Process secondProcess = new Process(2, 1, 7, 6);
-        Process thirdProcess = new Process(3, 2, 3, 3);
-        Process fourthProcess = new Process(4, 3, 6, 5);
-        Process fifthProcess = new Process(5, 4, 5, 4);
-        processes1.add(firstprocess);
-        processes1.add(secondProcess);
-        processes1.add(thirdProcess);
-        processes1.add(fourthProcess);
-        processes1.add(fifthProcess);
+        // Process firstprocess = new Process(1, 0, 1, 2);
+        // Process secondProcess = new Process(2, 1, 7, 6);
+        // Process thirdProcess = new Process(3, 2, 3, 3);
+        // Process fourthProcess = new Process(4, 3, 6, 5);
+        // Process fifthProcess = new Process(5, 4, 5, 4);
+        // processes1.add(firstprocess);
+        // processes1.add(secondProcess);
+        // processes1.add(thirdProcess);
+        // processes1.add(fourthProcess);
+        // processes1.add(fifthProcess);
 
         numOfProcesses = processes1.size();
-        schedullingAlgo(processes1, quantum);
+        ProcessData(input);
+
+        // schedullingAlgo(processes1, quantum);
         displayGanttChart();
         displayStatistics();
         // displayAvg();
-        // ProcessData(input);
+    }
+
+    public static boolean isTheIdUniqe(int id) {
+
+        for (Process p : processes1) {
+            if (p.getPid() == id) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     // collecting Process data
     public static void ProcessData(Scanner input) {
         Process Process = null;
         for (int i = 0; i < processes.length; i++) {
-            System.out.println("Enter Process ID: " + i);
+            System.out.print("Enter Process ID: ");
             processes[i][0] = input.nextInt();
 
-            System.out.println("Enter Brust Time: " + i);
+            while (!isTheIdUniqe(processes[i][0])) {
+                System.out.println("Sorry the ID " + processes[i][0] + " is already taken, chose another one");
+                System.out.print("Enter Process ID: ");
+                processes[i][0] = input.nextInt();
+            }
+
+            System.out.print("Enter Brust Time: ");
             processes[i][1] = input.nextInt();
 
-            System.out.println("Enter Time Arrival: " + i);
+            while (processes[i][1] < 0) {
+                System.out.println("The burst time must be positive");
+                System.out.print("Enter Brust Time: ");
+                processes[i][1] = input.nextInt();
+            }
+
+            System.out.print("Enter Time Arrival: ");
             processes[i][2] = input.nextInt();
 
-            System.out.println("Enter process Priorty: " + i);
+            while (processes[i][2] < 0) {
+                System.out.println("The arrival time must be positive");
+                System.out.print("Enter Time Arrival: ");
+                processes[i][2] = input.nextInt();
+            }
+
+            System.out.print("Enter process Priorty: ");
             processes[i][3] = input.nextInt();
+
+            while (processes[i][3] < 0) {
+                System.out.println("The Priorty must be 0 or positive");
+                System.out.print("Enter process Priorty: ");
+                processes[i][3] = input.nextInt();
+            }
 
             if (processes[i][0] == 0 && processes[i][1] == 0 && processes[i][2] == 0 && processes[i][3] == 0) {
                 break;
             }
             Process = new Process(processes[i][0], processes[i][2], processes[i][1], processes[i][3]);
 
-            for (Process p : processes1) {
-                if (processes[i][0] == (p.getPid())) {
-                    System.out.println("Sorry the pid \"" + processes[i][0] + "\" is already taken by another process");
-                    break;
-                }
-            }
             processes1.add(Process); // add every process to the process array list
-
+            System.out.println("-------------");
         }
         schedullingAlgo(processes1, quantum);
+        numOfProcesses = processes1.size();
+
     }
 
     public static void schedullingAlgo(ArrayList<Process> processes, int quantum) {
