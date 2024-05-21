@@ -122,16 +122,14 @@ public class App {
         String var = input.nextLine();
         if (var.equalsIgnoreCase("yes")) {
             // id arrival burst priority
-            Process firstprocess = new Process(1, 0, 1, 2);
-            Process secondProcess = new Process(2, 1, 7, 6);
-            Process thirdProcess = new Process(3, 2, 3, 3);
-            Process fourthProcess = new Process(4, 3, 6, 5);
-            Process fifthProcess = new Process(5, 4, 5, 4);
+            Process firstprocess = new Process(1, 0, 15, 1);
+            Process secondProcess = new Process(2, 2, 20, 2);
+            Process thirdProcess = new Process(3, 4, 5, 3);
+
             processes1.add(firstprocess);
             processes1.add(secondProcess);
             processes1.add(thirdProcess);
-            processes1.add(fourthProcess);
-            processes1.add(fifthProcess);
+
             numOfProcesses = processes1.size();
             schedullingAlgo(processes1, quantum);
 
@@ -168,15 +166,6 @@ public class App {
                 processes[i][0] = input.nextInt();
             }
 
-            System.out.print("Enter Brust Time: ");
-            processes[i][1] = input.nextInt();
-
-            while (processes[i][1] < 0) {
-                System.out.println("The burst time must be positive");
-                System.out.print("Enter Brust Time: ");
-                processes[i][1] = input.nextInt();
-            }
-
             System.out.print("Enter Time Arrival: ");
             processes[i][2] = input.nextInt();
 
@@ -184,6 +173,15 @@ public class App {
                 System.out.println("The arrival time must be positive");
                 System.out.print("Enter Time Arrival: ");
                 processes[i][2] = input.nextInt();
+            }
+
+            System.out.print("Enter Brust Time: ");
+            processes[i][1] = input.nextInt();
+
+            while (processes[i][1] < 0) {
+                System.out.println("The burst time must be positive");
+                System.out.print("Enter Brust Time: ");
+                processes[i][1] = input.nextInt();
             }
 
             System.out.print("Enter process Priorty: ");
@@ -331,12 +329,12 @@ public class App {
                     int start = Integer.parseInt(ganttchart.get(j - 1));
                     int end = Integer.parseInt(ganttchart.get(j + 1));
                     j += 2;
-    
+
                     while (j < ganttchart.size() && ganttchart.get(j).equals(current)) {
                         end = Integer.parseInt(ganttchart.get(j + 1));
                         j += 2;
                     }
-    
+
                     System.out.print(current + "-" + end);
                     if (j < ganttchart.size() - 1) {
                         System.out.print("-");
@@ -353,7 +351,7 @@ public class App {
             }
         }
         System.out.println(); // Add a new line at the end for better readability
-    }    
+    }
 
     public static int getNextReady(ArrayList<Process> processes, int currentIndex, int currentTime) {
         /* Return first ready process, they are already sorted by priority */
@@ -363,9 +361,7 @@ public class App {
         // Start from the current index and check all processes circularly
         for (int i = 0; i < size; i++) {
             int index = (j + i) % size;
-            if ((currentTime >= processes.get(index).getArrivalTime())
-            // && (processes.get(index).getRemainingBurst() != 0)
-            ) {
+            if (currentTime >= processes.get(index).getArrivalTime()) {
                 return index; //
             }
         }
