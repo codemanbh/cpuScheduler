@@ -154,42 +154,49 @@ public class App {
     }
 
     
-    public static int getIntInput(Scanner input, String prompt) {
+    public static int getIntInput(Scanner input, String prompt, boolean allowNegative) {
         System.out.print(prompt);
         while (!input.hasNextInt()) {
             System.out.println("That's not a valid integer. Please enter an integer.");
             input.next();
             System.out.print(prompt);
         }
-        return input.nextInt();
+        int value = input.nextInt();
+        if (!allowNegative) {
+            while (value < 0) {
+                System.out.println("The value must be positive. Please enter a positive integer.");
+                value = getIntInput(input, prompt, false);
+            }
+        }
+        return value;
     }
 
     // collecting Process data
     public static void ProcessData(Scanner input) {
         for (int i = 0; i < processes.length; i++) {
-            processes[i][0] = getIntInput(input, "Enter Process ID: ");
+            processes[i][0] = getIntInput(input, "Enter Process ID: ", false);
 
             while (!isTheIdUniqe(processes[i][0])) {
                 System.out.println("Sorry the ID " + processes[i][0] + " is already taken, choose another one");
-                processes[i][0] = getIntInput(input, "Enter Process ID: ");
+                processes[i][0] = getIntInput(input, "Enter Process ID: ", false);
             }
 
-            processes[i][2] = getIntInput(input, "Enter Time Arrival: ");
+            processes[i][2] = getIntInput(input, "Enter Time Arrival: ", false);
             while (processes[i][2] < 0) {
                 System.out.println("The arrival time must be positive");
-                processes[i][2] = getIntInput(input, "Enter Time Arrival: ");
+                processes[i][2] = getIntInput(input, "Enter Time Arrival: ", false);
             }
 
-            processes[i][1] = getIntInput(input, "Enter Burst Time: ");
+            processes[i][1] = getIntInput(input, "Enter Burst Time: ", false);
             while (processes[i][1] < 0) {
                 System.out.println("The burst time must be positive");
-                processes[i][1] = getIntInput(input, "Enter Burst Time: ");
+                processes[i][1] = getIntInput(input, "Enter Burst Time: ", false);
             }
 
-            processes[i][3] = getIntInput(input, "Enter process Priority: ");
+            processes[i][3] = getIntInput(input, "Enter process Priority: ", false);
             while (processes[i][3] < 0) {
                 System.out.println("The Priority must be 0 or positive");
-                processes[i][3] = getIntInput(input, "Enter process Priority: ");
+                processes[i][3] = getIntInput(input, "Enter process Priority: ", false);
             }
 
             if (processes[i][0] == 0 && processes[i][1] == 0 && processes[i][2] == 0 && processes[i][3] == 0) {
