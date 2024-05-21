@@ -104,8 +104,8 @@ public class App {
         quantum = input.nextInt();
 
         while (quantum <= 0) {
-            System.out.println("Error: The quantum time must be greater than 0\n" +
-                    "Please enter the quantum time again");
+            System.out.println(
+                    "Error: The quantum time must be greater than 0\n" + "Please enter the quantum time again");
             quantum = input.nextInt();
         }
 
@@ -124,7 +124,7 @@ public class App {
         numOfProcesses = processes1.size();
         schedullingAlgo(processes1, quantum);
         displayGanttChart();
-        // displayStatistics();
+        displayStatistics();
         // displayAvg();
         // ProcessData(input);
     }
@@ -188,21 +188,18 @@ public class App {
 
             // if it is the first time for the process to run,
             // then add it's response time to the totalResponseTime
-            // if (runningProcess.getBurstTime() == remainingBurst) {
-            // runningProcess.setResponseTime(currentTime -
-            // runningProcess.getArrivalTime());
-            // }
+            if (runningProcess.getBurstTime() == remainingBurst) {
+                runningProcess.setResponseTime(currentTime - runningProcess.getArrivalTime());
+            }
 
             ganttchart.add("p" + processes.get(i).getPid());
             if (remainingBurst - quantum <= 0) {
 
                 currentTime += remainingBurst;
-                // runningProcess
-                // .setWaitingTime(currentTime - runningProcess.getArrivalTime() -
-                // runningProcess.getBurstTime());
+                runningProcess
+                        .setWaitingTime(currentTime - runningProcess.getArrivalTime() - runningProcess.getBurstTime());
 
-                // runningProcess.setTurnAroundTime(currentTime -
-                // runningProcess.getArrivalTime());
+                runningProcess.setTurnAroundTime(currentTime - runningProcess.getArrivalTime());
 
                 processes.remove(i);
 
@@ -224,61 +221,55 @@ public class App {
     }
 
     public static void displayStatistics() {
-        // for (String g : ganttchart) {
-        // System.out.println("(" + g + ")");
-        // }
 
         for (int i = 0; i < numOfProcesses; i++) {
             Process currentP = processesStatistics.get(i);
             boolean foundResponseTime = false;
+            String pName = "p" + currentP.getPid();
 
             for (int j = 0; j < ganttchart.size(); j++) {
-                // System.out.println(
-                // ganttchart.get(j) + ("p" + currentP.getPid()) + ganttchart.get(j) == ("p" +
-                // currentP.getPid()));
 
-                // System.out.print(ganttchart.get(j) + " ");
-                // System.out.print(currentP.getPid() + " ");
-                if (ganttchart.get(j).length() == 2) {
-                    System.out.print(ganttchart.get(j).charAt(1) == (char) currentP.getPid());
+                if (ganttchart.get(j).equals(pName)) {
 
+                    if (!foundResponseTime) {
+                        currentP.setResponseTime(Integer.parseInt(ganttchart.get(j - 1)) - currentP.getArrivalTime());
+                        foundResponseTime = true;
+                    }
+
+                    currentP.setTurnAroundTime(Integer.parseInt(ganttchart.get(j + 1)) - currentP.getArrivalTime());
+                    currentP.setWaitingTime(currentP.getTurnAroundTime() - currentP.getBurstTime());
                 }
-
-                System.out.println();
-
-                // if ((ganttchart.get(j) == "p" + currentP.getPid()) && !foundResponseTime) {
-                // currentP.setResponseTime(Integer.parseInt(ganttchart.get(j - 1)));
-                // }
 
             }
         }
+        processesStatistics.sort(Comparator.comparingInt(p -> p.getPid()));
 
-        // for (Process p : processesStatistics) {
-        // // processes1
-        // System.out.println("pid: " + p.getPid());
-        // System.out.println("Arrival Time: " + p.getArrivalTime());
-        // System.out.println("Bust Time: " + p.getBurstTime());
-        // System.out.println("Priority: " + p.getPriority());
-        // // System.out.println("Turnaround Time: " + p.getTurnAroundTime());
-        // System.out.println("Response Time: " + p.getResponseTime());
-        // // System.out.println("Waiting Time: " + p.getWaitingTime());
+        for (Process p : processesStatistics) {
+            // processes1
+            System.out.println("pid: " + p.getPid());
+            System.out.println("Arrival Time: " + p.getArrivalTime());
+            System.out.println("Bust Time: " + p.getBurstTime());
+            System.out.println("Priority: " + p.getPriority());
+            System.out.println("Turnaround Time: " + p.getTurnAroundTime());
+            System.out.println("Response Time: " + p.getResponseTime());
+            System.out.println("Waiting Time: " + p.getWaitingTime());
 
-        // System.out.println("-----------------------");
+            System.out.println("-----------------------");
 
-        // totalTurnaroundTime += p.getTurnAroundTime();
-        // totalResponseTime += p.getResponseTime();
-        // totalWaitingTime += p.getWaitingTime();
-        // }
+            totalTurnaroundTime += p.getTurnAroundTime();
+            totalResponseTime += p.getResponseTime();
+            totalWaitingTime += p.getWaitingTime();
+        }
 
-        // if (numOfProcesses > 0) {
-        // avgTurnaroundTime = (double) totalTurnaroundTime / (double) numOfProcesses;
-        // avgWaitingTime = (double) totalWaitingTime / (double) numOfProcesses;
-        // avgResponseTime = (double) totalResponseTime / (double) numOfProcesses;
-        // }
+        if (numOfProcesses > 0) {
+            avgTurnaroundTime = (double) totalTurnaroundTime / (double) numOfProcesses;
+            avgWaitingTime = (double) totalWaitingTime / (double) numOfProcesses;
+            avgResponseTime = (double) totalResponseTime / (double) numOfProcesses;
+        }
 
-        // System.out.println("average turnaround time: " + avgTurnaroundTime);
-        // System.out.println("average Waiting time: " + avgWaitingTime);
-        // System.out.println("average Response time: " + avgResponseTime);
+        System.out.println("average turnaround time: " + avgTurnaroundTime);
+        System.out.println("average Waiting time: " + avgWaitingTime);
+        System.out.println("average Response time: " + avgResponseTime);
 
     }
 
