@@ -21,6 +21,7 @@ class Process {
         this.burstTime = burstTime;
         this.priority = priority;
         this.remainingBurst = burstTime;
+
     }
 
     public int getPid() {
@@ -75,25 +76,41 @@ class Process {
         this.remainingBurst = remainingBurst;
     }
 
-
 }
 
-class App {
+public class App {
 
     static int[][] processes = new int[50][4];
     static final ArrayList<String> ganttchart = new ArrayList<String>();
     static ArrayList<Process> processes1 = new ArrayList<Process>(); // aray list of process class
-    int numOfProcesses = 0;
+    static int numOfProcesses = 0;
     int algorithm = 0;
     static int quantum;
+    static int totalTurnaroundTime = 0;
+    static int totalResponseTime = 0;
+    static int totalWaitingTime = 0;
+
+    static double avgTurnaroundTime = 0;
+    static double avgResponseTime = 0;
+    static double avgWaitingTime = 0;
+
+    static ArrayList<Process> processesStatistics;
 
     // Collect process details
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         System.out.print("Enter quantum time (q): ");
+
         quantum = input.nextInt();
-        //id arrival burst priority
-        Process firstprocess = new Process(1, 0, 1,2);
+
+        while (quantum <= 0) {
+            System.out.println("Error: The quantum time must be greater than 0\n" +
+                    "Please enter the quantum time again");
+            quantum = input.nextInt();
+        }
+
+        // id arrival burst priority
+        Process firstprocess = new Process(1, 0, 1, 2);
         Process secondProcess = new Process(2, 1, 7, 6);
         Process thirdProcess = new Process(3, 2, 3, 3);
         Process fourthProcess = new Process(4, 3, 6, 5);
@@ -104,8 +121,11 @@ class App {
         processes1.add(fourthProcess);
         processes1.add(fifthProcess);
 
+        numOfProcesses = processes1.size();
         schedullingAlgo(processes1, quantum);
-
+        displayGanttChart();
+        // displayStatistics();
+        // displayAvg();
         // ProcessData(input);
     }
 
@@ -145,34 +165,55 @@ class App {
     public static void schedullingAlgo(ArrayList<Process> processes, int quantum) {
         // Sort processes based on arrival time and priority
         // processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
+
         processes.sort(Comparator.comparingInt(p -> p.getPriority()));
 
+        processesStatistics = new ArrayList<>(processes);
+        processesStatistics.sort(Comparator.comparingInt(p -> p.getPriority()));
         // Queue for ready processes
         Queue<Process> readyQueue = new LinkedList<>();
 
         // Calculate Turnaround Time, Response Time, Waiting Time, and Gantt Chart
         int currentTime = 0;
-        int totalTurnaroundTime = 0;
-        int totalResponseTime = 0;
-        int totalWaitingTime = 0;
+
         // System.out.println("second bruh" + processes.get(1).getArrivalTime());
 
         ganttchart.add("0");
-        int i = getNextReady(processes, 0, currentTime); /* index of first ready process*/
-        while(processes.size() != 1){
+        int i = getNextReady(processes, 0, currentTime); /* index of first ready process */
+
+        while (processes.size() != 1) {
+            Process runningProcess = processesStatistics.get(i);
+
             int remainingBurst = processes.get(i).getRemainingBurst();
+
+            // if it is the first time for the process to run,
+            // then add it's response time to the totalResponseTime
+            // if (runningProcess.getBurstTime() == remainingBurst) {
+            // runningProcess.setResponseTime(currentTime -
+            // runningProcess.getArrivalTime());
+            // }
+
             ganttchart.add("p" + processes.get(i).getPid());
-            if (remainingBurst-quantum <= 0) {
+            if (remainingBurst - quantum <= 0) {
+
                 currentTime += remainingBurst;
+                // runningProcess
+                // .setWaitingTime(currentTime - runningProcess.getArrivalTime() -
+                // runningProcess.getBurstTime());
+
+                // runningProcess.setTurnAroundTime(currentTime -
+                // runningProcess.getArrivalTime());
+
                 processes.remove(i);
-                ganttchart.add((currentTime) + ""); /*  converting to string using concatenation */
+
+                ganttchart.add((currentTime) + ""); /* converting to string using concatenation */
             } else {
-                processes.get(i).setRemainingBurst(remainingBurst-quantum);
-                currentTime = currentTime+quantum;
-                ganttchart.add((currentTime) + ""); /*  converting to string using concatenation */
+                processes.get(i).setRemainingBurst(remainingBurst - quantum);
+                currentTime = currentTime + quantum;
+                ganttchart.add((currentTime) + ""); /* converting to string using concatenation */
             }
             i = getNextReady(processes, i, currentTime);
-            if (i == -1){
+            if (i == -1) {
                 break;
             }
 
@@ -180,12 +221,74 @@ class App {
         ganttchart.add("p" + processes.get(0).getPid());
         ganttchart.add(currentTime + processes.get(0).getRemainingBurst() + "");
 
+    }
+
+    public static void displayStatistics() {
+        // for (String g : ganttchart) {
+        // System.out.println("(" + g + ")");
+        // }
+
+        for (int i = 0; i < numOfProcesses; i++) {
+            Process currentP = processesStatistics.get(i);
+            boolean foundResponseTime = false;
+
+            for (int j = 0; j < ganttchart.size(); j++) {
+                // System.out.println(
+                // ganttchart.get(j) + ("p" + currentP.getPid()) + ganttchart.get(j) == ("p" +
+                // currentP.getPid()));
+
+                // System.out.print(ganttchart.get(j) + " ");
+                // System.out.print(currentP.getPid() + " ");
+                if (ganttchart.get(j).length() == 2) {
+                    System.out.print(ganttchart.get(j).charAt(1) == (char) currentP.getPid());
+
+                }
+
+                System.out.println();
+
+                // if ((ganttchart.get(j) == "p" + currentP.getPid()) && !foundResponseTime) {
+                // currentP.setResponseTime(Integer.parseInt(ganttchart.get(j - 1)));
+                // }
+
+            }
+        }
+
+        // for (Process p : processesStatistics) {
+        // // processes1
+        // System.out.println("pid: " + p.getPid());
+        // System.out.println("Arrival Time: " + p.getArrivalTime());
+        // System.out.println("Bust Time: " + p.getBurstTime());
+        // System.out.println("Priority: " + p.getPriority());
+        // // System.out.println("Turnaround Time: " + p.getTurnAroundTime());
+        // System.out.println("Response Time: " + p.getResponseTime());
+        // // System.out.println("Waiting Time: " + p.getWaitingTime());
+
+        // System.out.println("-----------------------");
+
+        // totalTurnaroundTime += p.getTurnAroundTime();
+        // totalResponseTime += p.getResponseTime();
+        // totalWaitingTime += p.getWaitingTime();
+        // }
+
+        // if (numOfProcesses > 0) {
+        // avgTurnaroundTime = (double) totalTurnaroundTime / (double) numOfProcesses;
+        // avgWaitingTime = (double) totalWaitingTime / (double) numOfProcesses;
+        // avgResponseTime = (double) totalResponseTime / (double) numOfProcesses;
+        // }
+
+        // System.out.println("average turnaround time: " + avgTurnaroundTime);
+        // System.out.println("average Waiting time: " + avgWaitingTime);
+        // System.out.println("average Response time: " + avgResponseTime);
+
+    }
+
+    public static void displayGanttChart() {
         int j = 0;
-        while (j < ganttchart.size()){
+        while (j < ganttchart.size()) {
             if (j == ganttchart.size() - 1) {
                 System.out.println(ganttchart.get(j));
             } else {
-                if (j <= ganttchart.size()-3  && ganttchart.get(j) == ganttchart.get(j+2)){
+                if (j <= ganttchart.size() - 3 && ganttchart.get(j) == ganttchart.get(j + 2)) {
                     j += 2;
                 }
                 System.out.print(ganttchart.get(j) + "-");
@@ -194,7 +297,7 @@ class App {
         }
     }
 
-    public static int getNextReady(ArrayList<Process> processes, int currentIndex, int currentTime){
+    public static int getNextReady(ArrayList<Process> processes, int currentIndex, int currentTime) {
         /* Return first ready process, they are already sorted by priority */
         int size = processes.size();
         int indexToReturn;
@@ -202,7 +305,9 @@ class App {
         // Start from the current index and check all processes circularly
         for (int i = 0; i < size; i++) {
             int index = (j + i) % size;
-            if (currentTime >= processes.get(index).getArrivalTime()) {
+            if ((currentTime >= processes.get(index).getArrivalTime())
+            // && (processes.get(index).getRemainingBurst() != 0)
+            ) {
                 return index; //
             }
         }
@@ -211,14 +316,14 @@ class App {
 
         /* finding the minimum arrival time to choose as next process */
         int minimum = Integer.MAX_VALUE;
-        for (int i = 0; i < processes.size(); i++){
+        for (int i = 0; i < processes.size(); i++) {
             int thisArrival = processes.get(i).getArrivalTime();
-            if (thisArrival < minimum){
+            if (thisArrival < minimum) {
                 minimum = thisArrival;
             }
         }
         // ganttchart.add(currentTime + "");
-        if (minimum == Integer.MAX_VALUE){
+        if (minimum == Integer.MAX_VALUE) {
             return -1;
         }
         return minimum;
