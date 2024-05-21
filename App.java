@@ -326,14 +326,34 @@ public class App {
             if (j == ganttchart.size() - 1) {
                 System.out.println(ganttchart.get(j));
             } else {
-                if (j <= ganttchart.size() - 3 && ganttchart.get(j) == ganttchart.get(j + 2)) {
+                String current = ganttchart.get(j);
+                if (current.startsWith("p")) {
+                    int start = Integer.parseInt(ganttchart.get(j - 1));
+                    int end = Integer.parseInt(ganttchart.get(j + 1));
                     j += 2;
+    
+                    while (j < ganttchart.size() && ganttchart.get(j).equals(current)) {
+                        end = Integer.parseInt(ganttchart.get(j + 1));
+                        j += 2;
+                    }
+    
+                    System.out.print(current + "-" + end);
+                    if (j < ganttchart.size() - 1) {
+                        System.out.print("-");
+                    }
+                } else {
+                    if (j == 0 || !ganttchart.get(j - 1).equals(current)) {
+                        System.out.print(current);
+                        if (j < ganttchart.size() - 1) {
+                            System.out.print("-");
+                        }
+                    }
+                    j++;
                 }
-                System.out.print(ganttchart.get(j) + "-");
             }
-            j++;
         }
-    }
+        System.out.println(); // Add a new line at the end for better readability
+    }    
 
     public static int getNextReady(ArrayList<Process> processes, int currentIndex, int currentTime) {
         /* Return first ready process, they are already sorted by priority */
