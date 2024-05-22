@@ -93,4 +93,11 @@ public class Statistics {
         }
         System.out.println(); // Add a new line at the end for better readability
     }
+
+    // public void displayGanttChartSimple(ArrayList<String> ganttchart) {
+    // for (int i = 0; i < ganttchart.size(); i++) {
+    // System.out.print(ganttchart.get(i) + "-");
+    // }
+    // System.out.println();
+    // }
 }

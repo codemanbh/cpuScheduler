@@ -21,15 +21,14 @@ public class App {
         UserInput kpd = new UserInput();
         quantum = kpd.getIntInput("Enter quantum time (q): ", "onlyPositive");
 
-        System.out.println("Do you like to use preentered process (yes/no)?");
+        System.out.print("Do you like to use preentered process (yes/no)?");
 
         String var = input.nextLine();
         if (var.equalsIgnoreCase("yes")) {
             // id arrival burst priority
-            processes1.add(new Process(1, 0, 5, 5));
-            processes1.add(new Process(2, 0, 8, 3));
-            processes1.add(new Process(3, 2, 1, 2));
-            processes1.add(new Process(4, 10, 3, 6));
+
+            int testNum = kpd.getIntInput("enter test num: ", "canBeZero");
+            Testing.runTest(processes1, testNum);
 
             processesStatistics = new ArrayList<>(processes1);
 
@@ -43,6 +42,8 @@ public class App {
 
         Statistics statistics = new Statistics();
         statistics.displayGanttChart(ganttchart);
+        // statistics.displayGanttChartSimple(ganttchart);
+
         statistics.displayStatistics(processesStatistics, ganttchart);
         // displayAvg();
     }

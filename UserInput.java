@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class UserInput {
@@ -12,8 +13,9 @@ public class UserInput {
             try {
                 value = input.nextInt();
                 break;
-            } catch (Exception e) {
+            } catch (InputMismatchException e) {
                 System.out.println("Must be a number !");
+                input.next();
             }
         }
         return value;
