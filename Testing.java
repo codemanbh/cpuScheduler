@@ -34,6 +34,16 @@ class Testing {
             processes.add(new Process(1, 0, 1, 5));
             processes.add(new Process(2, 8, 1, 3));
             break;
+        case 2:
+            // start the highest priority first
+            processes.add(new Process(1, 0, 5, 2));
+            processes.add(new Process(2, 0, 10, 1));
+            break;
+        case 3:
+            // check the rourn roben
+            processes.add(new Process(1, 0, 10, 1));
+            processes.add(new Process(2, 0, 10, 1));
+            break;
         }
     }
 }
