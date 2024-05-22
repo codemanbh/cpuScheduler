@@ -2,10 +2,24 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.lang.Thread;
 
 public class Algorithm {
 
-    public static void schedullingAlgo(ArrayList<Process> processes, int quantum, ArrayList<String> ganttchart) {
+    private ArrayList<Process> processes;
+    private int quantum;
+    ArrayList<String> ganttchart;
+    int currentTime;
+
+    public Algorithm(ArrayList<Process> processes, int quantum, ArrayList<String> ganttchart) {
+        this.processes = processes;
+        this.quantum = quantum;
+        this.ganttchart = ganttchart;
+        this.currentTime = 0;
+
+    }
+
+    public void schedullingAlgo() {
         // Sort processes based on arrival time and priority
         // processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
 
@@ -13,8 +27,6 @@ public class Algorithm {
 
         // Queue for ready processes
         Queue<Process> readyQueue = new LinkedList<>();
-
-        int currentTime = 0;
 
         ganttchart.add("0");
         int i = getNextReady(processes, 0, currentTime, ganttchart); /* index of first ready process */
@@ -25,7 +37,26 @@ public class Algorithm {
             int remainingBurst = processes.get(i).getRemainingBurst();
 
             ganttchart.add("p" + processes.get(i).getPid());
-            if (remainingBurst - quantum <= 0) {
+
+            int timeUntilMorePriority = ArrivedProcessWithMorePriority(i);
+
+            // System.out.println(timeUntilMorePriority);
+            if (timeUntilMorePriority > 0) {
+                // System.out.println(timeUntilMorePriority);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    // Handle the exception
+                    e.printStackTrace();
+                }
+
+                currentTime += timeUntilMorePriority;
+                System.out.println("Run , end time: " + currentTime);
+
+                processes.get(i).setRemainingBurst(remainingBurst - timeUntilMorePriority);
+                ganttchart.add((currentTime) + "");
+
+            } else if (remainingBurst - quantum <= 0) {
 
                 currentTime += remainingBurst;
 
@@ -48,7 +79,32 @@ public class Algorithm {
 
     }
 
-    public static int getNextReady(ArrayList<Process> processes, int currentIndex, int currentTime,
+    public int ArrivedProcessWithMorePriority(int currentIndex) {
+        Process currentProcess = processes.get(currentIndex);
+        int remainingBurst = processes.get(currentIndex).getRemainingBurst();
+        int priority = processes.get(currentIndex).getPriority();
+
+        int maxStopTime = Math.min(currentTime + remainingBurst, currentTime + quantum);
+        // System.out.println("max time allowed: " + maxTimeAllowed);
+
+        for (int i = 0; i < processes.size(); i++) {
+            if (i == currentIndex) {
+                continue;
+            }
+            Process p = processes.get(i);
+
+            boolean ariveBeforeComplete = (currentTime + currentProcess.getBurstTime() > p.getArrivalTime());
+            boolean morePriority = (currentProcess.getPriority() > p.getPriority());
+
+            if (ariveBeforeComplete && morePriority) {
+                return p.getArrivalTime() - currentTime;
+            }
+        }
+
+        return -1;
+    }
+
+    public int getNextReady(ArrayList<Process> processes, int currentIndex, int currentTime,
             ArrayList<String> ganttchart) {
         /* Return first ready process, they are already sorted by priority */
         int size = processes.size();

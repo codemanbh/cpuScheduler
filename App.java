@@ -12,7 +12,6 @@ public class App {
     static int numOfProcesses = 0;
     int algorithm = 0;
     static int quantum;
-
     static ArrayList<Process> processesStatistics;
 
     // Collect process details
@@ -27,19 +26,20 @@ public class App {
         String var = input.nextLine();
         if (var.equalsIgnoreCase("yes")) {
             // id arrival burst priority
-            processes1.add(new Process(1, 0, 1, 2));
-            processes1.add(new Process(2, 1, 7, 6));
-            processes1.add(new Process(3, 2, 3, 3));
-            processes1.add(new Process(4, 3, 6, 5));
-            processes1.add(new Process(5, 4, 5, 4));
+            processes1.add(new Process(1, 0, 5, 5));
+            processes1.add(new Process(2, 0, 8, 3));
+            processes1.add(new Process(3, 2, 1, 2));
+            processes1.add(new Process(4, 10, 3, 6));
 
-            ArrayList<Process> processesStatistics = new ArrayList<>(processes1);
-
-            Algorithm.schedullingAlgo(processes1, quantum, ganttchart);
+            processesStatistics = new ArrayList<>(processes1);
 
         } else {
-            ProcessData();
+            ProcessData(); // TODO: check for processesStatistics and it it coped the array
         }
+
+        Algorithm algo = new Algorithm(processes1, quantum, ganttchart);
+
+        algo.schedullingAlgo();
 
         Statistics statistics = new Statistics();
         statistics.displayGanttChart(ganttchart);
@@ -89,7 +89,6 @@ public class App {
             processes1.add(process);
             System.out.println("-------------");
         }
-        Algorithm.schedullingAlgo(processes1, quantum, ganttchart);
         numOfProcesses = processes1.size();
     }
 
