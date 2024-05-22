@@ -5,79 +5,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
-class Process {
-    private int pid;
-    private int arrivalTime;
-    private int burstTime;
-    private int turnAroundTime;
-    private int responseTime;
-    private int waitingTime;
-    private int remainingBurst;
-    private int priority;
-
-    Process(int processID, int arrivalTime, int burstTime, int priority) {
-        this.pid = processID;
-        this.arrivalTime = arrivalTime;
-        this.burstTime = burstTime;
-        this.priority = priority;
-        this.remainingBurst = burstTime;
-
-    }
-
-    public int getPid() {
-        return pid;
-    }
-
-    public int getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public int getBurstTime() {
-        return burstTime;
-    }
-
-    public int getTurnAroundTime() {
-        return turnAroundTime;
-    }
-
-    public void setTurnAroundTime(int turnAroundTime) {
-        this.turnAroundTime = turnAroundTime;
-    }
-
-    public int getResponseTime() {
-        return responseTime;
-    }
-
-    public void setResponseTime(int responseTime) {
-        this.responseTime = responseTime;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public int getWaitingTime() {
-        return waitingTime;
-    }
-
-    public void setWaitingTime(int waitingTime) {
-        this.waitingTime = waitingTime;
-    }
-
-    public int getRemainingBurst() {
-        return remainingBurst;
-    }
-
-    public void setRemainingBurst(int remainingBurst) {
-        this.remainingBurst = remainingBurst;
-    }
-
-}
-
 public class App {
 
     static int[][] processes = new int[50][4];
@@ -152,26 +79,34 @@ public class App {
     }
 
     
-    public static int getIntInput(Scanner input, String prompt) {
+    public static int getIntInput(Scanner input, String prompt, boolean allowNegative) {
         System.out.print(prompt);
         while (!input.hasNextInt()) {
             System.out.println("That's not a valid integer. Please enter an integer.");
             input.next();
             System.out.print(prompt);
         }
-        return input.nextInt();
+        int value = input.nextInt();
+        if (!allowNegative) {
+            while (value < 0) {
+                System.out.println("The value must be positive. Please enter a positive integer.");
+                value = getIntInput(input, prompt, false);
+            }
+        }
+        return value;
     }
 
     // collecting Process data
     public static void ProcessData(Scanner input) {
         for (int i = 0; i < processes.length; i++) {
-            processes[i][0] = getIntInput(input, "Enter Process ID: ");
+            processes[i][0] = getIntInput(input, "Enter Process ID: ", false);
 
             while (!isTheIdUniqe(processes[i][0])) {
                 System.out.println("Sorry the ID " + processes[i][0] + " is already taken, choose another one");
-                processes[i][0] = getIntInput(input, "Enter Process ID: ");
+                processes[i][0] = getIntInput(input, "Enter Process ID: ", false);
             }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
             System.out.print("Enter Time Arrival: ");
             processes[i][2] = input.nextInt();
@@ -179,11 +114,15 @@ public class App {
 =======
             processes[i][2] = getIntInput(input, "Enter Time Arrival: ");
 >>>>>>> 6dc3756669410a58eb87977ade9935014f6548c4
+=======
+            processes[i][2] = getIntInput(input, "Enter Time Arrival: ", false);
+>>>>>>> 5cf0aed179746327ea1b82c598e4d889d7b6f3fc
             while (processes[i][2] < 0) {
                 System.out.println("The arrival time must be positive");
-                processes[i][2] = getIntInput(input, "Enter Time Arrival: ");
+                processes[i][2] = getIntInput(input, "Enter Time Arrival: ", false);
             }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
             System.out.print("Enter Brust Time: ");
             processes[i][1] = input.nextInt();
@@ -198,16 +137,19 @@ public class App {
             processes[i][3] = input.nextInt();
 =======
             processes[i][1] = getIntInput(input, "Enter Burst Time: ");
+=======
+            processes[i][1] = getIntInput(input, "Enter Burst Time: ", false);
+>>>>>>> 5cf0aed179746327ea1b82c598e4d889d7b6f3fc
             while (processes[i][1] < 0) {
                 System.out.println("The burst time must be positive");
-                processes[i][1] = getIntInput(input, "Enter Burst Time: ");
+                processes[i][1] = getIntInput(input, "Enter Burst Time: ", false);
             }
 >>>>>>> 6dc3756669410a58eb87977ade9935014f6548c4
 
-            processes[i][3] = getIntInput(input, "Enter process Priority: ");
+            processes[i][3] = getIntInput(input, "Enter process Priority: ", false);
             while (processes[i][3] < 0) {
                 System.out.println("The Priority must be 0 or positive");
-                processes[i][3] = getIntInput(input, "Enter process Priority: ");
+                processes[i][3] = getIntInput(input, "Enter process Priority: ", false);
             }
 
             if (processes[i][0] == 0 && processes[i][1] == 0 && processes[i][2] == 0 && processes[i][3] == 0) {
