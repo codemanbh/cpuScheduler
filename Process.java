@@ -70,4 +70,14 @@ class Process {
         this.remainingBurst = remainingBurst;
     }
 
+    public void printProcessInfo() {
+        System.out.println("pid: " + getPid());
+        System.out.println("Arrival Time: " + getArrivalTime());
+        System.out.println("Bust Time: " + getBurstTime());
+        System.out.println("Priority: " + getPriority());
+        System.out.println("Turnaround Time: " + getTurnAroundTime());
+        System.out.println("Response Time: " + getResponseTime());
+        System.out.println("Waiting Time: " + getWaitingTime());
+    }
+
 }
