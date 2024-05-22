@@ -1,0 +1,15 @@
+            while (processes[i][2] < 0) {
+            System.out.println("The arrival time must be positive");
+            processes[i][2] = kpd.getIntInput("Enter Time Arrival: ", false);
+            }
+
+            
+            while (processes[i][1] < 0) {
+            System.out.println("The burst time must be positive");
+            processes[i][1] = kpd.getIntInput(input, "Enter Burst Time: ", false);
+            }
+
+                        while (processes[i][3] < 0) {
+            System.out.println("The Priority must be 0 or positive");
+            processes[i][3] = kpd.getIntInput(input, "Enter process Priority: ", false);
+            }
