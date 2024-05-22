@@ -37,7 +37,7 @@ public class App {
 
             Algorithm.schedullingAlgo(processes1, quantum, ganttchart);
 
-        } else {
+        } else if(var.equalsIgnoreCase("no"))  {
             ProcessData();
         }
 
