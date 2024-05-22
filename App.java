@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 public class App {
 
-    static int[][] processes = new int[50][4];
     static final ArrayList<String> ganttchart = new ArrayList<String>();
     static ArrayList<Process> processes1 = new ArrayList<Process>(); // aray list of process class
     static int numOfProcesses = 0;
@@ -66,7 +65,7 @@ public class App {
         UserInput kpd = new UserInput();
         Scanner input = new Scanner(System.in);
 
-        for (int i = 0; i < processes.length; i++) {
+        while (true) {
             processID = kpd.getIntInput("Enter Process ID: ", "canBeNegative");
 
             // isTheIdUniqe is not working because we are using a sigle Array list, not 2D
