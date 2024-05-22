@@ -33,8 +33,8 @@ public class App {
 
             processesStatistics = new ArrayList<>(processes1);
 
-        } else {
-            ProcessData(); // TODO: check for processesStatistics and it it coped the array
+        } else if (var.equalsIgnoreCase("no")) {
+            ProcessData();
         }
 
         Algorithm algo = new Algorithm(processes1, quantum, ganttchart);
