@@ -64,11 +64,7 @@ class Testing {
             processes.add(new Process(2, 20, 10, 2));
             processes.add(new Process(3, 25, 3, 1));
             break;
-        
-        case 7:
-            processes.add(new Process(2, 20, 10, 2));
-            processes.add(new Process(3, 25, 3, 1));
-            break;
+
         }
     }
 }

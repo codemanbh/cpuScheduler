@@ -21,7 +21,6 @@ public class Algorithm {
     public void schedullingAlgo() {
         // Sort processes based on arrival time and priority
         processes.sort(Comparator.comparingInt(p -> p.getArrivalTime()));
-
         processes.sort(Comparator.comparingInt(p -> p.getPriority()));
 
         // Queue for ready processes
@@ -32,12 +31,13 @@ public class Algorithm {
         int i = getNextReady(processes, -1, currentTime, ganttchart,
                 completeQuantumTime); /* index of first ready process */
 
-        if (i == -1) { // if i == -1 meaning it is idle so we need to find the minimum waiting time to continue at
+        if (i == -1) { // if i == -1 meaning it is idle so we need to find the minimum waiting time to
+                       // continue at
             ganttchart.add("\033[33mIDLE\033[0m");
             i = handleIDLE(processes);
             ganttchart.add(currentTime + "");
         }
-        
+
         while (processes.size() != 1) {
             // Process runningProcess = processesStatistics.get(i);
 
@@ -45,21 +45,22 @@ public class Algorithm {
 
             ganttchart.add("p" + processes.get(i).getPid());
 
-             if (remainingBurst - quantum <= 0) {
+            if (remainingBurst - quantum <= 0) {
 
                 currentTime += remainingBurst;
                 completeQuantumTime = false;
 
                 processes.remove(i);
-                if (i >= processes.size()){
-                    i = processes.size()-1;
+                if (i >= processes.size()) {
+                    i = processes.size() - 1;
                 }
-                if (i == -1) { // if i == -1 meaning it is idle so we need to find the minimum waiting time to continue at
+                if (i == -1) { // if i == -1 meaning it is idle so we need to find the minimum waiting time to
+                               // continue at
                     ganttchart.add("\033[33mIDLE\033[0m");
                     i = handleIDLE(processes);
                     ganttchart.add(currentTime + "");
                 }
-                
+
                 ganttchart.add((currentTime) + ""); /* converting to string using concatenation */
             } else {
                 completeQuantumTime = true;
@@ -69,7 +70,8 @@ public class Algorithm {
                 ganttchart.add((currentTime) + ""); /* converting to string using concatenation */
             }
             i = getNextReady(processes, i, currentTime, ganttchart, completeQuantumTime);
-            if (i == -1) { // if i == -1 meaning it is idle so we need to find the minimum waiting time to continue at
+            if (i == -1) { // if i == -1 meaning it is idle so we need to find the minimum waiting time to
+                           // continue at
                 ganttchart.add("\033[33mIDLE\033[0m");
                 i = handleIDLE(processes);
                 ganttchart.add(currentTime + "");
@@ -77,12 +79,11 @@ public class Algorithm {
             }
 
             // if processes returned is ahead of current time, make CPU idle
-            if (processes.get(i).getArrivalTime() > currentTime){ 
+            if (processes.get(i).getArrivalTime() > currentTime) {
                 ganttchart.add("\033[33mIDLE\033[0m");
                 currentTime = processes.get(i).getArrivalTime();
                 ganttchart.add(currentTime + "");
             }
-
 
         }
         ganttchart.add("p" + processes.get(0).getPid());
@@ -90,16 +91,16 @@ public class Algorithm {
 
     }
 
-    public int handleIDLE(ArrayList<Process> processes){
+    public int handleIDLE(ArrayList<Process> processes) {
         int i = 0;
         int minimumArrival = Integer.MAX_VALUE;
-        for (int x = 0; x < processes.size();x++){
+        for (int x = 0; x < processes.size(); x++) {
             boolean isReady = processes.get(x).getArrivalTime() <= minimumArrival;
-            if (isReady){
+            if (isReady) {
                 i = x;
                 minimumArrival = processes.get(i).getArrivalTime();
                 currentTime = processes.get(i).getArrivalTime();
-            } 
+            }
         }
         return i;
     }
@@ -150,7 +151,7 @@ public class Algorithm {
 
         // System.out.println("current :" + currentIndex);
         // for (int index = 0; index < processes.size(); index++) {
-        //     System.out.println(processes.get(index).getPid());  
+        // System.out.println(processes.get(index).getPid());
         // }
         // System.exit(1);
         Process currentProcess = processes.get(currentIndex);
@@ -192,7 +193,6 @@ public class Algorithm {
                 return i;
             }
         }
-
 
         // Start from the current index and check all processes circularly
         return -1;

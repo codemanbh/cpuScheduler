@@ -27,13 +27,15 @@ public class App {
         if (var.equalsIgnoreCase("yes")) {
             // id arrival burst priority
 
-            int testNum = kpd.getIntInput("enter test num: ", "canBeZero");
+            int testNum = kpd.getIntInput("enter test num (0-6): ", "canBeZero");
             Testing.runTest(processes1, testNum);
 
             processesStatistics = new ArrayList<>(processes1);
 
         } else if (var.equalsIgnoreCase("no")) {
             ProcessData();
+            processesStatistics = new ArrayList<>(processes1);
+
         }
 
         Algorithm algo = new Algorithm(processes1, quantum, ganttchart);
@@ -69,23 +71,21 @@ public class App {
         while (true) {
             processID = kpd.getIntInput("Enter Process ID: ", "canBeNegative");
 
-            // isTheIdUniqe is not working because we are using a sigle Array list, not 2D
-            // array
+            // the process id must be uniqe
             while (!isTheIdUniqe(processID)) {
                 System.out.println("Sorry the ID " + processID + " is already taken, choose another one");
                 processID = kpd.getIntInput("Enter Process ID: ", "canBeNegative");
             }
-
+            // take the input from the user and validate it using the custom validation
+            // with the getIntInput class
             arrivalTime = kpd.getIntInput("Enter Time Arrival: ", "canBeZero");
             burstTime = kpd.getIntInput("Enter Burst Time: ", "canBeZero");
             priority = kpd.getIntInput("Enter process Priority: ", "canBeZero");
 
-            // TODO: how can we stop the program, if we enterd a process ID that is zero
-            // before ???
             if (processID == 0 && arrivalTime == 0 && burstTime == 0 && priority == 0) {
                 break;
             }
-
+            // add the process to the processes1 array
             Process process = new Process(processID, arrivalTime, burstTime, priority);
             processes1.add(process);
             System.out.println("-------------");
