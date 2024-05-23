@@ -58,6 +58,17 @@ class Testing {
             processes.add(new Process(4, 0, 10, 2));
 
             break;
+        case 6:
+            // start the highest priority first
+            processes.add(new Process(1, 0, 5, 3));
+            processes.add(new Process(2, 20, 10, 2));
+            processes.add(new Process(3, 25, 3, 1));
+            break;
+        
+        case 7:
+            processes.add(new Process(2, 20, 10, 2));
+            processes.add(new Process(3, 25, 3, 1));
+            break;
         }
     }
 }
