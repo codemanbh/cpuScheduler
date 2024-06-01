@@ -80,4 +80,12 @@ class Process {
         System.out.println("Waiting Time: " + getWaitingTime());
     }
 
+    public boolean isArrived(int currentTime) {
+        return (this.getArrivalTime() <= currentTime);
+    }
+
+    public boolean isCompleted() {
+        return this.getRemainingBurst() == 0;
+    }
+
 }
