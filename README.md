@@ -6,6 +6,43 @@ This Project is a CPU Process Scedhuling emulator for operating systems done in 
 
 `App.java` is the main file
 
+## Sample input/output using presented process
+
+### input
+
+```
+Enter quantum time (q): 3
+Do you like to use preentered process (yes/no)?yes
+enter test num (0-6): 3
+```
+
+### output
+
+```
+Gantt Chart:
+0-p1-3-p2-6-p1-9-p2-12-p1-15-p2-18-p1-19-p2-20
+-----------------------
+pid: 1
+Arrival Time: 0
+Bust Time: 10
+Priority: 1
+Turnaround Time: 19
+Response Time: 0
+Waiting Time: 9
+-----------------------
+pid: 2
+Arrival Time: 0
+Bust Time: 10
+Priority: 1
+Turnaround Time: 20
+Response Time: 3
+Waiting Time: 10
+-----------------------
+average turnaround time: 19.5
+average Waiting time: 9.5
+average Response time: 1.5
+```
+
 ## Usage
 1. Compile and run the program
 ```
